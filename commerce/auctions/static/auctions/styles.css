@@ -1,0 +1,17 @@
+body {
+    padding: 10px;
+}
+.top{
+    display: flex;
+    gap: 50px;
+    margin-bottom: 10px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+}
+.time{
+    color: gray;
+    margin-top: 100px;
+}
+.right-top{
+    margin-top: 20px;
+}

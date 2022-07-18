@@ -1,0 +1,36 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<form action="{% url 'CreateList' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <input autofocus class="form-control" type="text" name="title" placeholder="Title" required>
+    </div>
+    {{ title }}
+    <div class="form-group">
+        <input class="form-control" type="text" name="discription" placeholder="Discription" required>
+    {{ dis }}
+    </div>
+    <div class="form-group">
+        <input autofocus class="form-control" type="number" name="bid" placeholder="Bid" required>
+    {{ bid }}
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="url" name="image" placeholder="URL Image" required>
+    {{ url }}
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="text" name="Category" placeholder="Category" autocomplete="off" required>
+    {{ category }}
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="datetime-local" name="startTime" placeholder="Start Time" required>
+    {{ start }}
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="datetime-local" name="endTime" placeholder="End Time" required>
+    {{ end }}
+    </div>
+    <input class="btn btn-primary" type="submit" value="CreatList">
+</form>
+{% endblock %}
