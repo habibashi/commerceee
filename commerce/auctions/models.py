@@ -13,7 +13,7 @@ class Categories(models.Model):
         return f"{self.category}"
 
 
-class CreateList(models.Model):
+class Listing(models.Model):
     title = models.CharField(max_length=64)
     discription = models.CharField(max_length=64)
     bid = models.FloatField(max_length=50)

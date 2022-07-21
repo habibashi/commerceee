@@ -1,0 +1,21 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    
+    <p style="color: red;">{{ EnterCategory }} </p>
+    <form action="{% url 'categories' %}" method="post">
+        {% csrf_token %}
+        <div class="category">
+            <div class="form-group">
+                <select name="category" class="form-control">
+                    <option value="Category">Categories</option>
+                    {% for category in Categories %}
+                        <option value="{{ category.category }}">{{ category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input style="height: 40px; width: 80px;" class="btn btn-primary" type="submit" value="search">
+        </div>
+    </form>
+
+{% endblock %}

@@ -15,3 +15,7 @@ body {
 .right-top{
     margin-top: 20px;
 }
+.category{
+    display: flex;
+    gap: 10px;
+}

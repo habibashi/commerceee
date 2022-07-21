@@ -20,8 +20,11 @@
     {{ url }}
     </div>
     <div class="form-group">
-        <input class="form-control" type="text" name="Category" placeholder="Category" autocomplete="off" required>
-    {{ category }}
+        <select name="category" class="form-control">
+            {% for category in Categories %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
     </div>
     <div class="form-group">
         <input class="form-control" type="datetime-local" name="startTime" placeholder="Start Time" required>

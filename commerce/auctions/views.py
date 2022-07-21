@@ -1,14 +1,17 @@
+import re
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import Categories, User, Listing
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html", {
+        "active": Listing.objects.all()
+    })
 
 
 def login_view(request):
@@ -69,11 +72,11 @@ def CreateList(request):
         discription = request.POST["discription"]
         bid = request.POST["bid"]
         urlImage = request.POST["image"]
-        category = request.POST["Category"]
+        category = request.POST["category"]
         startTime = request.POST["startTime"]
         endTime = request.POST["endTime"]
 
-        if not title or not discription or not bid or not urlImage or not category or not startTime or not endTime:
+        if not title or not discription or not bid or not urlImage or not startTime or not endTime:
             return render(request, "auctions/CreateList.html", {
                 "title": "enter title",
                 "dis": "add description",
@@ -82,10 +85,40 @@ def CreateList(request):
                 "category": "enter category",
                 "start": "enter start Time",
                 "end": "enter end Time"
-            })
+            })  
             
-        create = CreateList.objects.create(title=title, discription=discription, bid=bid, urlImage=urlImage, category=category, startTime=startTime, endTime=endTime)
+        create = Listing.objects.create(
+            title=title,
+            discription=discription,
+            bid=bid,
+            urlImage=urlImage,
+            categoryID=Categories.objects.get(category=category),
+            startTime=startTime,
+            endTime=endTime
+        )
         create.save()
         return HttpResponseRedirect(reverse("index"))
+    
+    return render(request, "auctions/CreateList.html", {
+        "Categories": Categories.objects.all()
+    })
 
-    return render(request, "auctions/CreateList.html")
+
+def categories(request):
+
+    if request.method == "POST":
+        category = request.POST["category"]
+
+        if category == "Category":
+            return render(request, "auctions/category.html", {
+                "EnterCategory": "Enter Catergory"
+            })
+
+        select = Listing.objects.filter(categoryID = Categories.objects.get(category=category))
+        return render(request, "auctions/categoryPage.html", {
+            "select": select
+        })
+
+    return render(request, "auctions/category.html", {
+        "Categories": Categories.objects.all()
+    })
