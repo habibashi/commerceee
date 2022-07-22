@@ -10,12 +10,18 @@ body {
 }
 .time{
     color: gray;
-    margin-top: 100px;
 }
 .right-top{
     margin-top: 20px;
 }
 .category{
+    display: flex;
+    gap: 10px;
+}
+.view-time-top{
+    margin-top: 100px;
+}
+.gap{
     display: flex;
     gap: 10px;
 }

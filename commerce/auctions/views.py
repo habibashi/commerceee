@@ -9,6 +9,7 @@ from .models import Categories, User, Listing
 
 
 def index(request):
+    
     return render(request, "auctions/index.html", {
         "active": Listing.objects.all()
     })
@@ -94,7 +95,8 @@ def CreateList(request):
             urlImage=urlImage,
             categoryID=Categories.objects.get(category=category),
             startTime=startTime,
-            endTime=endTime
+            endTime=endTime,
+            userId = User.objects.get(pk = request.user.id)
         )
         create.save()
         return HttpResponseRedirect(reverse("index"))
@@ -121,4 +123,10 @@ def categories(request):
 
     return render(request, "auctions/category.html", {
         "Categories": Categories.objects.all()
+    })
+
+def view(request, listing_id):
+    view = Listing.objects.get(pk = listing_id)
+    return render(request, "auctions/view.html",{
+        "list" : view
     })

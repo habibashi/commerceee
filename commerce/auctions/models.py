@@ -22,6 +22,7 @@ class Listing(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     startTime = models.DateTimeField(auto_now=False, auto_now_add=False)
     endTime = models.DateTimeField(auto_now=False, auto_now_add=False)
+    userId = models.ForeignKey(User, on_delete=models.CASCADE, related_name="userId", null=True)
 
     def __str__(self):
         return f"{self.title} {self.discription}"

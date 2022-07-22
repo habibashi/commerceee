@@ -12,7 +12,15 @@
             <div class="right-top">
                 <div><h5>{{ act.title }}</h5></div>
                 <div><h5>Price: ${{ act.bid }} <h5></div>
-                <div class="time"> <p>Created {{ act.created_at }} </p></div>
+                <div class="view-time-top"> 
+                    <div class="gap">
+                        <div><a href="{% url 'view' act.id %}" class="btn btn-secondary">views</a></div>
+                        <form action="" method="post">
+                            <div><input class="btn btn-danger" type="submit" value="add watch list"></div>
+                        </form>
+                    </div>  
+                    <div class="time"> <p>Created {{ act.created_at }} </p></div>
+                </div>
             </div>
         </div>
     {% endfor %}    

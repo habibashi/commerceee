@@ -1,0 +1,29 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+        <h2>Listing: {{ list.title }}</h2> 
+        <div>
+            <img src="{{ list.urlImage }}" width="800px" height="300px">
+        </div>
+        <div>
+            <p>{{ list.discription }}</p>
+        </div>
+        <div>
+            <h4> ${{list.bid}} </h4>
+        </div>
+        <br>
+        
+        2 bid(s) so far. your bid is the current bid.
+        <div class="form-group">
+            <input autofocus class="form-control" type="number" name="bid" placeholder="Bid" required>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Place Bid">
+        <br>
+        <br>
+
+        <h4>Details</h4>
+        <ul>
+            <li>Listed By: <span style="color: blue">{{ list.userId }} </span></li>
+            <li>Category: {{ list.categoryID }}</li>
+        </ul>
+{% endblock %}
