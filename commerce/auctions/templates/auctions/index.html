@@ -12,10 +12,11 @@
             <div class="right-top">
                 <div><h5>{{ act.title }}</h5></div>
                 <div><h5>Price: ${{ act.bid }} <h5></div>
-                <div class="view-time-top"> 
+                <div class="view-time-top">
                     <div class="gap">
                         <div><a href="{% url 'view' act.id %}" class="btn btn-secondary">views</a></div>
-                        <form action="" method="post">
+                        <form action="{% url 'addwatchlist' act.id %}" method="post">
+                            {% csrf_token %}
                             <div><input class="btn btn-danger" type="submit" value="add watch list"></div>
                         </form>
                     </div>  

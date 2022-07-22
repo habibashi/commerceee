@@ -1,15 +1,14 @@
-import re
+
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import Categories, User, Listing
+from .models import Categories, User, Listing, Watchlist
 
 
 def index(request):
-    
     return render(request, "auctions/index.html", {
         "active": Listing.objects.all()
     })
@@ -125,8 +124,34 @@ def categories(request):
         "Categories": Categories.objects.all()
     })
 
+
 def view(request, listing_id):
     view = Listing.objects.get(pk = listing_id)
     return render(request, "auctions/view.html",{
         "list" : view
+    })
+
+def addwatchlist(request, listing_id):
+    if request.method == "POST":
+        listing = Listing.objects.get(pk = listing_id)
+
+        addwatchlist = Watchlist.objects.create(
+            title=listing.title,
+            discription=listing.discription,
+            bid=listing.bid,
+            urlImage=listing.urlImage,
+            categoryID=listing.categoryID,
+            startTime=listing.startTime,
+            endTime=listing.endTime,
+            userId = User.objects.get(pk = request.user.id)
+        )
+        addwatchlist.save()
+        return HttpResponseRedirect(reverse("watchlist"))
+        
+
+
+
+def watchlist(request):
+    return render(request, "auctions/watchlist.html", {
+        "watchlist" : Watchlist.objects.filter(userId = request.user.id)
     })
