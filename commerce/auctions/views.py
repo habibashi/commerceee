@@ -1,4 +1,4 @@
-
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
@@ -98,6 +98,7 @@ def CreateList(request):
             userId = User.objects.get(pk = request.user.id)
         )
         create.save()
+        messages.success(request, 'list have be success')
         return HttpResponseRedirect(reverse("index"))
     
     return render(request, "auctions/CreateList.html", {
@@ -133,8 +134,12 @@ def view(request, listing_id):
 
 def addwatchlist(request, listing_id):
     if request.method == "POST":
-        listing = Listing.objects.get(pk = listing_id)
+        # check = Watchlist.objects.filter(userId= request.user.id)
+        if Watchlist.objects.filter(listId=listing_id, userId=request.user.id):
+            messages.warning(request, 'This list Already in WatchList')
+            return HttpResponseRedirect(reverse("index"))
 
+        listing = Listing.objects.get(pk = listing_id)
         addwatchlist = Watchlist.objects.create(
             title=listing.title,
             discription=listing.discription,
@@ -143,15 +148,23 @@ def addwatchlist(request, listing_id):
             categoryID=listing.categoryID,
             startTime=listing.startTime,
             endTime=listing.endTime,
-            userId = User.objects.get(pk = request.user.id)
-        )
+            userId = User.objects.get(pk = request.user.id),
+            listId = Listing.objects.get(pk=listing_id),
+            created_at = listing.created_at,
+        ) 
         addwatchlist.save()
+        messages.success(request, 'Added Successfully')
         return HttpResponseRedirect(reverse("watchlist"))
-        
-
-
 
 def watchlist(request):
     return render(request, "auctions/watchlist.html", {
         "watchlist" : Watchlist.objects.filter(userId = request.user.id)
     })
+
+
+def delete(request, delete_id):
+    if request.method == "POST":
+        delete = Watchlist.objects.get(pk = delete_id, userId = request.user.id)
+        delete.delete()
+        messages.success(request, 'have ben deleted')
+        return HttpResponseRedirect(reverse("watchlist"))

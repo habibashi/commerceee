@@ -3,10 +3,18 @@
 {% block body %}
     <h2>Active Listings</h2>
 
+    {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-dismissible alert-success">
+                    <strong>{{ message }}</strong>
+                </div>
+            {% endfor %}
+    {% endif %}
+
     {% for act in active %}
         <div class="top">
             <div>
-                <img src="{{ act.urlImage }}" width="400" height="250">
+                <img class="image" src="{{ act.urlImage }}" style="width: auto; min-width: 220px; max-width: 220px; height: auto; max-height: 220px; max-height: 220px;">
             </div>
 
             <div class="right-top">
