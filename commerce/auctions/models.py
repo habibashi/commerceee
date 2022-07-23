@@ -42,3 +42,12 @@ class Watchlist(models.Model):
     def __str__(self):
         return f"{self.title} {self.discription}"
 
+class Bids(models.Model):
+    bid = models.FloatField(max_length=50)
+    listId = models.ForeignKey(Listing, on_delete=models.CASCADE, null=True)
+    userId = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f"{self.bid}"
+
+

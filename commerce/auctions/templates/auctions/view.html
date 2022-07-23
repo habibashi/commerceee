@@ -1,6 +1,14 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-dismissible alert-warning">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
         <h2>Listing: {{ list.title }}</h2> 
         <div>
             <img src="{{ list.urlImage }}" style="width: auto; height: auto; max-height: 300px; max-width: 400px; margin-left: 100px;">
@@ -13,14 +21,19 @@
         </div>
         <br>
         
-        2 bid(s) so far. your bid is the current bid.
-        <div class="form-group">
-            <input autofocus class="form-control" type="number" name="bid" placeholder="Bid" required>
-        </div>
-        <input class="btn btn-primary" type="submit" value="Place Bid">
+        
+        {{ count }} bid(s) so far. your bid is the current bid.
+        <form action="{% url 'bids' list.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input autofocus class="form-control" type="number" name="bid" placeholder="Bid" required>
+            </div>
+            {{ price }}
+            <input class="btn btn-primary" type="submit" value="Place Bid">
+        </form>
         <br>
         <br>
-
+        
         <h4>Details</h4>
         <ul>
             <li>Listed By: <span style="color: blue">{{ list.userId }} </span></li>

@@ -1,3 +1,5 @@
+from os import listdir
+from re import I
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -5,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import Categories, User, Listing, Watchlist
+from .models import Categories, User, Listing, Watchlist, Bids
 
 
 def index(request):
@@ -128,8 +130,10 @@ def categories(request):
 
 def view(request, listing_id):
     view = Listing.objects.get(pk = listing_id)
+    count = Bids.objects.filter(listId = listing_id).count()
     return render(request, "auctions/view.html",{
-        "list" : view
+        "list" : view,
+        "count": count 
     })
 
 def addwatchlist(request, listing_id):
@@ -168,3 +172,27 @@ def delete(request, delete_id):
         delete.delete()
         messages.success(request, 'have ben deleted')
         return HttpResponseRedirect(reverse("watchlist"))
+
+
+def bids(request, listing_id):
+    if request.method == "POST":
+
+        bid = int(request.POST["bid"])
+        bids = Listing.objects.get(pk = listing_id)
+        if bid <= bids.bid:
+            messages.warning(request, 'bid must be greater than old price')
+            return HttpResponseRedirect(reverse("view", args=(listing_id,)))
+        bids.bid = bid
+        bids.save()
+
+        createBid = Bids.objects.create(
+            bid = bids.bid,
+            listId = Listing.objects.get(pk=bids.id),
+            userId = User.objects.get(pk = request.user.id)
+        )
+        createBid.save()
+        
+        return HttpResponseRedirect(reverse("view", args=(listing_id,)))
+
+
+
