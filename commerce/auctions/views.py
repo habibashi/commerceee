@@ -1,5 +1,5 @@
-from os import listdir
-from re import I
+
+from django import http
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -7,12 +7,13 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import Categories, User, Listing, Watchlist, Bids
+from .models import Categories, User, Listing, Watchlist, Bids, Comment
 
 
 def index(request):
     return render(request, "auctions/index.html", {
         "active": Listing.objects.all()
+        
     })
 
 
@@ -117,8 +118,9 @@ def categories(request):
             return render(request, "auctions/category.html", {
                 "EnterCategory": "Enter Catergory"
             })
-
+        
         select = Listing.objects.filter(categoryID = Categories.objects.get(category=category))
+
         return render(request, "auctions/categoryPage.html", {
             "select": select
         })
@@ -137,32 +139,31 @@ def view(request, listing_id):
     })
 
 def addwatchlist(request, listing_id):
-    if request.method == "POST":
-        # check = Watchlist.objects.filter(userId= request.user.id)
-        if Watchlist.objects.filter(listId=listing_id, userId=request.user.id):
-            messages.warning(request, 'This list Already in WatchList')
-            return HttpResponseRedirect(reverse("index"))
+    if Watchlist.objects.filter(listId=listing_id, userId=request.user.id):
+        messages.warning(request, 'This list Already in WatchList')
+        return HttpResponseRedirect(reverse("index"))
 
-        listing = Listing.objects.get(pk = listing_id)
-        addwatchlist = Watchlist.objects.create(
-            title=listing.title,
-            discription=listing.discription,
-            bid=listing.bid,
-            urlImage=listing.urlImage,
-            categoryID=listing.categoryID,
-            startTime=listing.startTime,
-            endTime=listing.endTime,
-            userId = User.objects.get(pk = request.user.id),
-            listId = Listing.objects.get(pk=listing_id),
-            created_at = listing.created_at,
-        ) 
-        addwatchlist.save()
-        messages.success(request, 'Added Successfully')
-        return HttpResponseRedirect(reverse("watchlist"))
+    listing = Listing.objects.get(pk = listing_id)
+    addwatchlist = Watchlist.objects.create(
+        title=listing.title,
+        discription=listing.discription,
+        bid=listing.bid,
+        urlImage=listing.urlImage,
+        categoryID=listing.categoryID,
+        startTime=listing.startTime,
+        endTime=listing.endTime,
+        userId = User.objects.get(pk = request.user.id),
+        listId = Listing.objects.get(pk=listing_id),
+        created_at = listing.created_at,
+    ) 
+    addwatchlist.save()
+    messages.success(request, 'Added Successfully')
+    return HttpResponseRedirect(reverse("watchlist"))
 
 def watchlist(request):
     return render(request, "auctions/watchlist.html", {
         "watchlist" : Watchlist.objects.filter(userId = request.user.id)
+
     })
 
 
@@ -193,6 +194,44 @@ def bids(request, listing_id):
         createBid.save()
         
         return HttpResponseRedirect(reverse("view", args=(listing_id,)))
+
+
+def comment(request, listing_id):
+    if request.method == "POST":
+        comment = request.POST["comment"]
+    
+
+        addcomment = Comment.objects.create(
+            comment = comment,
+            userId = User.objects.get(pk = request.user.id),
+            listId = Listing.objects.get(pk=listing_id),
+        ) 
+        addcomment.save()
+        return HttpResponseRedirect(reverse("comment", args=(listing_id,)))
+
+    return render(request, "auctions/comment.html", {
+        "comment": Listing.objects.get(pk = listing_id),
+        "selectComment": Comment.objects.filter(listId = listing_id) 
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+# def count(request):
+#     watchlistCount = Watchlist.objects.filter(userId = request.user.id).count()
+#     return render(request, "auctions/layout.html", {
+#         "count": watchlistCount
+#     })
+
+
 
 
 

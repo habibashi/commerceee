@@ -1,6 +1,13 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+    {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-dismissible alert-warning">
+                    <strong>{{ message }}</strong>
+                </div>
+            {% endfor %}
+    {% endif %}
     
     <p style="color: red;">{{ EnterCategory }} </p>
     <form action="{% url 'categories' %}" method="post">

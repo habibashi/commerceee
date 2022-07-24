@@ -40,3 +40,15 @@ body {
     margin-left: 750px;
     margin-bottom: 50px;
 }
+.watchlist-count{
+    display: flex;
+
+}
+.watchlist-count-border{
+    margin-top: 15px;
+    width: 15px;
+    border: 1px solid darkgray;
+    height: 15px;
+    background-color: darkgray;
+    border-radius: 3px;
+}

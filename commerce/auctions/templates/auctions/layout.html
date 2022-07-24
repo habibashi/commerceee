@@ -25,7 +25,10 @@
                     <a class="nav-link" href="{% url 'categories' %}">Categories</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
+                    <div class="watchlist-count">
+                        <div><a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a></div>
+                        <!-- <div class="watchlist-count-border">{{ count }}</div> -->
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'CreateList' %}">Create Listings</a>

@@ -50,4 +50,11 @@ class Bids(models.Model):
     def __str__(self):
         return f"{self.bid}"
 
+class Comment(models.Model):
+    comment = models.CharField(max_length=100)
+    listId = models.ForeignKey(Listing, on_delete=models.CASCADE, null=True)
+    userId = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f"{self.comment}"
 
