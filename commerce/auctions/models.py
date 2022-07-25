@@ -25,7 +25,7 @@ class Listing(models.Model):
     userId = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return f"{self.title} {self.discription}"
+        return f"{self.title} {self.discription} {self.bid}"
 
 class Watchlist(models.Model):
     title = models.CharField(max_length=64)

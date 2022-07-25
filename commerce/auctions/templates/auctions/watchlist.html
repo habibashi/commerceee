@@ -3,12 +3,14 @@
 {% block body %}
 
 {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-dismissible alert-warning">
-                    <strong>{{ message }}</strong>
-                </div>
-            {% endfor %}
-    {% endif %}
+    {% for message in messages %}
+        <div class="alert alert-dismissible alert-warning">
+            <strong>{{ message }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+
 
 {% for act in watchlist %}
     <div class="top">
@@ -18,12 +20,12 @@
 
         <div class="right-top">
             <div><h5>{{ act.title }}</h5></div>
-            <div><h5>Price: ${{ act.bid }} <h5></div>
+            <div><h5>Price: ${{ act.listId.bid }} <h5></div>
             <div class="delete-right">
                 <div class="view-time-top"> 
                     <div class="gap">
                         <div><a href="{% url 'view' act.listId.id %}" class="btn btn-secondary">views</a></div>
-                        <div><a href="{% url 'comment' act.id %}" class="btn btn-secondary">Comment</a></div>
+                        <div><a href="{% url 'comment' act.listId.id %}" class="btn btn-secondary">Comment</a></div>
                     </div>  
                     <div class="time"> <p>Created {{ act.created_at }} </p></div>
                 </div>

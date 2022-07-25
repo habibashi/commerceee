@@ -12,7 +12,8 @@ from .models import Categories, User, Listing, Watchlist, Bids, Comment
 
 def index(request):
     return render(request, "auctions/index.html", {
-        "active": Listing.objects.all()
+        "active": Listing.objects.all(),
+        
         
     })
 
@@ -177,7 +178,7 @@ def delete(request, delete_id):
 
 def bids(request, listing_id):
     if request.method == "POST":
-
+        
         bid = int(request.POST["bid"])
         bids = Listing.objects.get(pk = listing_id)
         if bid <= bids.bid:
@@ -192,6 +193,7 @@ def bids(request, listing_id):
             userId = User.objects.get(pk = request.user.id)
         )
         createBid.save()
+        messages.success(request, 'success')
         
         return HttpResponseRedirect(reverse("view", args=(listing_id,)))
 
@@ -213,6 +215,22 @@ def comment(request, listing_id):
         "comment": Listing.objects.get(pk = listing_id),
         "selectComment": Comment.objects.filter(listId = listing_id) 
     })
+
+def End(request, listing_id):
+    list = Listing.objects.get(pk = listing_id)
+    winner = Bids.objects.filter(listId = listing_id, bid=list.bid)
+    if winner:
+        return render(request, "auctions/winner.html", {
+        "winners" : winner
+        })
+    if winner:
+        delete = list
+        delete.delete()
+        return HttpResponseRedirect(reverse("End", args=(listing_id,)))
+    if not winner:
+        delete = list
+        delete.delete()
+        return HttpResponseRedirect(reverse("End", args=(listing_id,)))
 
 
 

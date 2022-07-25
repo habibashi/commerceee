@@ -8,7 +8,7 @@ class CategoriesAdmin(admin.ModelAdmin):
     list_display = ("id", "category")
 
 class WatchlistAdmin(admin.ModelAdmin):
-    list_display = ("id", "userId", "listId")
+    list_display = ("id", "userId", "bid", "listId")
 
 class BidsAdmin(admin.ModelAdmin):
     list_display =  ("id", "listId", "userId", "bid")
