@@ -10,7 +10,8 @@ from .models import Categories, User, Listing, Watchlist, Bids, Comment
 
 def index(request):
     return render(request, "auctions/index.html", {
-        "active": Listing.objects.filter(close=False)
+        "active": Listing.objects.filter(close=False),
+        "watchListCount": Watchlist.objects.filter(userId = request.user.id).count()
     })
 
 
@@ -104,7 +105,8 @@ def CreateList(request):
         
     
     return render(request, "auctions/CreateList.html", {
-        "Categories": Categories.objects.all()
+        "Categories": Categories.objects.all(),
+        "watchListCount": Watchlist.objects.filter(userId = request.user.id).count()
     })
 
 
@@ -121,14 +123,17 @@ def categories(request):
 
         if not select:
             return render(request, "auctions/categoryPage.html", {
-                "empty": "There is no list yet"
+                "empty": "There is no list yet",
+                "watchListCount": Watchlist.objects.filter(userId = request.user.id).count()
             })
         return render(request, "auctions/categoryPage.html", {
-            "select": select
+            "select": select,
+            "watchListCount": Watchlist.objects.filter(userId = request.user.id).count()
         })
 
     return render(request, "auctions/category.html", {
-        "Categories": Categories.objects.all()
+        "Categories": Categories.objects.all(),
+        "watchListCount": Watchlist.objects.filter(userId = request.user.id).count()
     })
 
 
@@ -137,7 +142,8 @@ def view(request, listing_id):
     count = Bids.objects.filter(listId = listing_id).count()
     return render(request, "auctions/view.html",{
         "list" : view,
-        "count": count 
+        "count": count,
+        "watchListCount": Watchlist.objects.filter(userId = request.user.id).count()
     })
 
 def addwatchlist(request, listing_id):
@@ -164,7 +170,8 @@ def addwatchlist(request, listing_id):
 
 def watchlist(request):
     return render(request, "auctions/watchlist.html", {
-        "watchlist" : Watchlist.objects.filter(userId = request.user.id)
+        "watchlist" : Watchlist.objects.filter(userId = request.user.id),
+        "watchListCount": Watchlist.objects.filter(userId = request.user.id).count()
 
     })
 
@@ -213,7 +220,8 @@ def comment(request, listing_id):
 
     return render(request, "auctions/comment.html", {
         "comment": Listing.objects.get(pk = listing_id),
-        "selectComment": Comment.objects.filter(listId = listing_id) 
+        "selectComment": Comment.objects.filter(listId = listing_id),
+        "watchListCount": Watchlist.objects.filter(userId = request.user.id).count()
     })
 
 def end(request, listing_id):
@@ -235,7 +243,8 @@ def end(request, listing_id):
 
 def winner(request):
     return render(request, "auctions/winner.html", {
-        "winners": Listing.objects.filter(close=True)
+        "winners": Listing.objects.filter(close=True),
+        "watchListCount": Watchlist.objects.filter(userId = request.user.id).count()
     })
 
 
