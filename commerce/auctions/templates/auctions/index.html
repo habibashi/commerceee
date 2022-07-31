@@ -5,7 +5,7 @@
 
     {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-dismissible alert-warning">
+                <div class="alert alert-dismissible alert-success">
                     <strong>{{ message }}</strong>
                 </div>
             {% endfor %}
@@ -26,7 +26,7 @@
                         <div><a href="{% url 'comment' act.id %}" class="btn btn-secondary">Comment</a></div>
                         <div><a href="{% url 'addwatchlist' act.id %}" class="btn btn-danger" type="submit">add watchlist</a></div>
                         {% if act.userId == request.user %}
-                            <div><a href="{% url 'End' act.id %}" class="btn btn-warning" type="submit">end</a></div>
+                            <div><a href="{% url 'end' act.id %}" class="btn btn-warning" type="submit">end</a></div>
                         {% endif %}
                     </div>  
                     <div class="time"> <p>Created {{ act.created_at }} </p></div>

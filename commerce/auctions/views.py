@@ -1,5 +1,3 @@
-
-from django import http
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -12,9 +10,7 @@ from .models import Categories, User, Listing, Watchlist, Bids, Comment
 
 def index(request):
     return render(request, "auctions/index.html", {
-        "active": Listing.objects.all(),
-        
-        
+        "active": Listing.objects.filter(close=False)
     })
 
 
@@ -104,6 +100,8 @@ def CreateList(request):
         create.save()
         messages.success(request, 'list have be success')
         return HttpResponseRedirect(reverse("index"))
+        
+        
     
     return render(request, "auctions/CreateList.html", {
         "Categories": Categories.objects.all()
@@ -114,14 +112,17 @@ def categories(request):
 
     if request.method == "POST":
         category = request.POST["category"]
-
         if category == "Category":
             return render(request, "auctions/category.html", {
                 "EnterCategory": "Enter Catergory"
             })
         
-        select = Listing.objects.filter(categoryID = Categories.objects.get(category=category))
+        select = Listing.objects.filter(categoryID = Categories.objects.get(category=category), close=False)
 
+        if not select:
+            return render(request, "auctions/categoryPage.html", {
+                "empty": "There is no list yet"
+            })
         return render(request, "auctions/categoryPage.html", {
             "select": select
         })
@@ -172,13 +173,12 @@ def delete(request, delete_id):
     if request.method == "POST":
         delete = Watchlist.objects.get(pk = delete_id, userId = request.user.id)
         delete.delete()
-        messages.success(request, 'have ben deleted')
+        messages.success(request, 'have been deleted successfully')
         return HttpResponseRedirect(reverse("watchlist"))
 
 
 def bids(request, listing_id):
     if request.method == "POST":
-        
         bid = int(request.POST["bid"])
         bids = Listing.objects.get(pk = listing_id)
         if bid <= bids.bid:
@@ -216,40 +216,27 @@ def comment(request, listing_id):
         "selectComment": Comment.objects.filter(listId = listing_id) 
     })
 
-def End(request, listing_id):
+def end(request, listing_id):
     list = Listing.objects.get(pk = listing_id)
-    winner = Bids.objects.filter(listId = listing_id, bid=list.bid)
-    if winner:
-        return render(request, "auctions/winner.html", {
-        "winners" : winner
-        })
-    if winner:
-        delete = list
-        delete.delete()
-        return HttpResponseRedirect(reverse("End", args=(listing_id,)))
-    if not winner:
-        delete = list
-        delete.delete()
-        return HttpResponseRedirect(reverse("End", args=(listing_id,)))
 
+    bid = Bids.objects.all()
+    if not Bids.objects.filter(listId = listing_id, bid=list.bid).first() in bid:
+        list.close = True
+        list.save()
+        messages.success(request, 'No winner')
+        return HttpResponseRedirect(reverse("winner"))
+        
+    winnerName = Bids.objects.get(listId = listing_id, bid=list.bid)
+    list.close = True
+    list.winner = User.objects.get(pk= winnerName.userId.id)
+    list.save()
+    messages.success(request, 'check the winner')
+    return HttpResponseRedirect(reverse("winner"))
 
-
-
-
-
-
-
-
-
-
-
-# def count(request):
-#     watchlistCount = Watchlist.objects.filter(userId = request.user.id).count()
-#     return render(request, "auctions/layout.html", {
-#         "count": watchlistCount
-#     })
-
-
+def winner(request):
+    return render(request, "auctions/winner.html", {
+        "winners": Listing.objects.filter(close=True)
+    })
 
 
 

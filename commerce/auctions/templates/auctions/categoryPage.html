@@ -1,7 +1,9 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-
+    {% if empty %}
+        <h5 class="centers">{{ empty }}</h5>
+    {% endif %}  
     {% for act in select %}
         <div class="top">
             <div>
@@ -21,6 +23,6 @@
                 </div>
             </div>
         </div>
-    {% endfor %}   
+    {% endfor %}
 
 {% endblock %}
